@@ -8,7 +8,9 @@
 import Foundation
 
 struct GroupDTO: Sendable {
-    let profile: Profile
+    let id: UUID
+    let name: String
+    let image: Data?
     let members: [PersonDTO]
     let expense: [ExpenseDTO]
 }

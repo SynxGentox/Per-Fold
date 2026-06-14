@@ -29,6 +29,6 @@ final class GroupsRepositoryImpl: GroupsRepository {
     }
     
     func deleteGroup(_ group: GroupDTO) async throws {
-        try await persistence.deleteGroup(id: group.profile.id)
+        try await persistence.deleteGroup(id: group.id)
     }
 }

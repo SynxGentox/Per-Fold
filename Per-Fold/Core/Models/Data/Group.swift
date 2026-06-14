@@ -10,13 +10,17 @@ import SwiftData
 
 @Model
 class Groups {
-    var profile: Profile
+    var id: UUID
+    var name: String
+    var image: Data?
     var expense: [Expense]
     var members: [Person]
     
-    init(profile: Profile, expense: [Expense], members: [Person]) {
-        self.profile = profile
+    init(id: UUID, name: String, image: Data?, expense: [Expense], members: [Person]) {
         self.expense = expense
         self.members = members
+        self.id = id
+        self.name = name
+        self.image = image
     }
 }

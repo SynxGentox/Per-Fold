@@ -13,9 +13,9 @@ actor PersistenceActor: ModelActor {
     
     let modelExecutor: any ModelExecutor
     
-    init(dataContainer: ModelContainer) {
-        self.modelContainer = dataContainer
-        let context = ModelContext(dataContainer)
+    init(modelContainer: ModelContainer) {
+        self.modelContainer = modelContainer
+        let context = ModelContext(modelContainer)
         self.modelExecutor = DefaultSerialModelExecutor(modelContext: context)
     }
     
@@ -29,39 +29,56 @@ actor PersistenceActor: ModelActor {
         return groups.map { mapToDTO($0) }
     }
     
+    func fetchExpense() throws -> [ExpenseDTO] {
+        let expense = try modelContext.fetch(FetchDescriptor<Expense>())
+        return expense.map { mapToDTO($0) }
+    }
+    
     func addPerson(_ dto: PersonDTO) throws {
-        let profile = Profile(
-            id: dto.profile.id,
-            name: dto.profile.name,
-            image: dto.profile.image
-        )
-        let person = Person(profile: profile, number: dto.number)
+        let person = Person(id: dto.id, name: dto.name, image: dto.image, number: dto.number)
         modelContext.insert(person)
         try modelContext.save()
     }
     
     func deletePerson(id: UUID) throws {
         let groups = try modelContext.fetch(FetchDescriptor<Person>())
-        if let target = groups.first(where: { $0.profile.id == id }) {
+        if let target = groups.first(where: { $0.id == id }) {
             modelContext.delete(target)
             try modelContext.save()
         }
     }
     
     func addGroup(_ dto: GroupDTO) throws {
-        let profile = Profile(
-            id: dto.profile.id,
-            name: dto.profile.name,
-            image: dto.profile.image
-        )
-        let group = Groups(profile: profile, expense: [], members: [])
+        let group = Groups(id: dto.id, name: dto.name, image: dto.image, expense: [], members: [])
         modelContext.insert(group)
         try modelContext.save()
     }
     
     func deleteGroup(id: UUID) throws {
         let groups = try modelContext.fetch(FetchDescriptor<Groups>())
-        if let target = groups.first(where: { $0.profile.id == id }) {
+        if let target = groups.first(where: { $0.id == id }) {
+            modelContext.delete(target)
+            try modelContext.save()
+        }
+    }
+    
+    func addExpense(_ dto: ExpenseDTO) throws {
+        let expense = Expense(
+            id: dto.id,
+            title: dto.title,
+            category: dto.category,
+            date: dto.date,
+            paidBy: dto.paidBy,
+            totalAmount: dto.totalAmount,
+            splitAmount: []
+        )
+        modelContext.insert(expense)
+        try modelContext.save()
+    }
+    
+    func deleteExpense(id: UUID) throws {
+        let expense = try modelContext.fetch(FetchDescriptor<Expense>())
+        if let target = expense.first(where: { $0.id == id }) {
             modelContext.delete(target)
             try modelContext.save()
         }
@@ -69,7 +86,9 @@ actor PersistenceActor: ModelActor {
     
     private func mapToDTO(_ group: Groups) -> GroupDTO {
         GroupDTO(
-            profile: group.profile,
+            id: group.id,
+            name: group.name,
+            image: group.image,
             members: group.members.map { mapToDTO($0) },
             expense: group.expense.map { mapToDTO($0) }
         )
@@ -77,7 +96,9 @@ actor PersistenceActor: ModelActor {
 
     private func mapToDTO(_ person: Person) -> PersonDTO {
         PersonDTO(
-            profile: person.profile,
+            id: person.id,
+            name: person.name,
+            image: person.image,
             number: person.number,
         )
     }

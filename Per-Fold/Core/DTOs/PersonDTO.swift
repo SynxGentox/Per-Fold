@@ -8,6 +8,8 @@
 import Foundation
 
 struct PersonDTO: Sendable {
-    let profile: Profile
+    let id: UUID
+    let name: String
+    let image: Data?
     let number: Int
 }

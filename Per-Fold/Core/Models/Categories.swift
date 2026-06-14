@@ -5,7 +5,7 @@
 //  Created by Aryan Verma on 13/06/26.
 //
 
-enum Categories: CaseIterable, Codable {
+enum Categories: String, CaseIterable, Codable, Sendable {
     case shopping
     case food
     case theater

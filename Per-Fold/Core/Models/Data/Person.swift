@@ -10,11 +10,15 @@ import SwiftData
 
 @Model
 class Person {
-    var profile: Profile
+    var id: UUID
+    var name: String
+    var image: Data?
     var number: Int
     
-    init(profile: Profile, number: Int) {
-        self.profile = profile
+    init(id: UUID, name: String, image: Data?, number: Int) {
         self.number = number
+        self.id = id
+        self.name = name
+        self.image = image
     }
 }
