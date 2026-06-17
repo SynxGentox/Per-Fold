@@ -13,7 +13,7 @@ struct ExpenseDTO: Sendable {
     let category: Categories
     let date: Date
     let paidBy: String
-    let totalAmount: Double
+    let amount: Double
     let splitAmount: [SplitDTO]
 }
 

@@ -69,7 +69,7 @@ actor PersistenceActor: ModelActor {
             category: dto.category,
             date: dto.date,
             paidBy: dto.paidBy,
-            totalAmount: dto.totalAmount,
+            totalAmount: dto.amount,
             splitAmount: []
         )
         modelContext.insert(expense)
@@ -110,7 +110,7 @@ actor PersistenceActor: ModelActor {
             category: expense.category,
             date: expense.date,
             paidBy: expense.paidBy,
-            totalAmount: expense.totalAmount,
+            amount: expense.amount,
             splitAmount: expense.splitAmount.map {
                 SplitDTO(
                     id: $0.id,

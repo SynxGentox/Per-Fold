@@ -9,9 +9,9 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    func card(color: Color, radius: CGFloat) -> some View {
+    func card(color: Color) -> some View {
         self.background(color)
-            .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .clipShape(ConcentricRectangle(corners: .concentric(minimum: 28), isUniform: false))
             .shadow(radius: 8)
     }
 }

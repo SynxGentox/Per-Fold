@@ -15,7 +15,7 @@ class Expense: Identifiable {
     var category: Categories
     var date: Date
     var paidBy: String
-    var totalAmount: Double
+    var amount: Double
     var splitAmount: [Split]
     
     init(id: UUID, title: String, category: Categories, date: Date, paidBy: String, totalAmount: Double, splitAmount: [Split]) {
@@ -24,7 +24,7 @@ class Expense: Identifiable {
         self.category = category
         self.date = date
         self.paidBy = paidBy
-        self.totalAmount = totalAmount
+        self.amount = totalAmount
         self.splitAmount = splitAmount
     }
 }
