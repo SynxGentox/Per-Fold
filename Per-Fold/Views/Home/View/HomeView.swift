@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var homeVM: HomeVM?
+    @State var homeVM: HomeVM = HomeVM(
+        groupsRepo: GroupsRepositoryImpl(persistence: <#PersistenceActor#>),
+        expenseRepo: ExpenseRepositoryImpl(persistence: <#PersistenceActor#>),
+        personRepo: PersonRepositoryImpl(persistence: <#PersistenceActor#>))
     let profile = ["bell", "person.circle.fill"]
     let buttonLabels = ["Add\nGroups", "Add\nMembers", "Pending"]
-    let buttonLabels2 = ["Add\nExpense", "Reminders", "Pay", "History"]
+    let buttonLabels2 = ["Add\nExpense", "Pay", "Reminders", "History"]
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -55,7 +58,7 @@ struct HomeView: View {
                     
                     HStack {
                         Text("Total Spent")
-                        Text(homeVM?.totalSpent ?? 0.0, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                        Text(homeVM.totalSpent, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .font(.title)
                     }
@@ -83,8 +86,10 @@ struct HomeView: View {
                 Color.white
                     .frame(maxWidth: .infinity,  minHeight: 30, maxHeight: 30)
                 
+                let columns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible())]
+                
                 VStack(spacing: 7) {
-                    HStack {
+                    LazyVGrid(columns: columns) {
                         ForEach (buttonLabels2, id: \.self) { title in
                             Button {
                                 
@@ -101,7 +106,7 @@ struct HomeView: View {
                     .card(color: Color(.darkGray).opacity(0.5))
                     
                     CategoryGrid(homeVM: homeVM)
-                    
+                    CategoryGrid(homeVM: homeVM)
                 }
                 .padding([.horizontal, .bottom], 8)
                 
@@ -113,10 +118,14 @@ struct HomeView: View {
                     }
                 }
                 .padding(.horizontal, 15)
-                
             }
         }
         
+        .task {
+            await homeVM.fetchGroups()
+            await homeVM.fetchPerson()
+            await homeVM.fetchExpense()
+        }
     }
 }
 
