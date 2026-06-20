@@ -6,12 +6,25 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct Per_FoldApp: App {
+    let modelContainer: ModelContainer
+    let persistenceActor: PersistenceActor
+    
+    init() {
+        do {
+            modelContainer = try ModelContainer(for: Person.self, Expense.self, Groups.self, Split.self)
+            persistenceActor = PersistenceActor(modelContainer: modelContainer)
+        } catch {
+            fatalError("ModelContainer error: \(error)")
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView(persistenceActor: persistenceActor)
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CategoryGrid: View {
     let homeVM: HomeVM
@@ -57,5 +58,11 @@ struct CategoryGrid: View {
 }
 
 #Preview {
-    CategoryGrid(homeVM: HomeVM(groupsRepo: <#T##any GroupsRepository#>, expenseRepo: <#T##any ExpenseRepository#>, personRepo: <#T##any PersonRepository#>))
+    let container = try! ModelContainer(
+        for: Person.self, Groups.self, Expense.self, Split.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    let actor = PersistenceActor(modelContainer: container)
+    
+    CategoryGrid(homeVM: HomeVM(groupsRepo: GroupsRepositoryImpl(persistence: actor), expenseRepo: ExpenseRepositoryImpl(persistence: actor), personRepo: PersonRepositoryImpl(persistence: actor)))
 }

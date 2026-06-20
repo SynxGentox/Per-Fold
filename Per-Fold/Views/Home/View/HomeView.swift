@@ -6,15 +6,24 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
-    @State var homeVM: HomeVM = HomeVM(
-        groupsRepo: GroupsRepositoryImpl(persistence: <#PersistenceActor#>),
-        expenseRepo: ExpenseRepositoryImpl(persistence: <#PersistenceActor#>),
-        personRepo: PersonRepositoryImpl(persistence: <#PersistenceActor#>))
+    let persistenceActor: PersistenceActor
+    @State var homeVM: HomeVM
+    
+    init(persistenceActor: PersistenceActor) {
+        self.persistenceActor = persistenceActor
+        self._homeVM = State(initialValue: HomeVM(
+            groupsRepo: GroupsRepositoryImpl(persistence: persistenceActor),
+            expenseRepo: ExpenseRepositoryImpl(persistence: persistenceActor),
+            personRepo: PersonRepositoryImpl(persistence: persistenceActor)))
+    }
     let profile = ["bell", "person.circle.fill"]
     let buttonLabels = ["Add\nGroups", "Add\nMembers", "Pending"]
     let buttonLabels2 = ["Add\nExpense", "Pay", "Reminders", "History"]
+    let searchText = ""
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -130,5 +139,11 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    let container = try! ModelContainer(
+        for: Person.self, Groups.self, Expense.self, Split.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    let actor = PersistenceActor(modelContainer: container)
+    
+    HomeView(persistenceActor: actor)
 }

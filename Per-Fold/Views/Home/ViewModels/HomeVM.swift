@@ -66,7 +66,7 @@ final class HomeVM {
         }
     }
     
-    func fetchExpense() async {
+    func fetchPerson() async {
         if !personData.isEmpty { dataState = .isLoading }
         do {
             let personResult = try await personRepo.fetchPerson()
@@ -82,7 +82,7 @@ final class HomeVM {
         }
     }
     
-    func fetchPerson() async {
+    func fetchExpense() async {
         if !expenseData.isEmpty { dataState = .isLoading }
         do {
             let expenseResult = try await expenseRepo.fetchExpense()
