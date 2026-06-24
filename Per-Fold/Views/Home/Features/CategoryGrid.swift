@@ -9,18 +9,19 @@ import SwiftUI
 import SwiftData
 
 struct CategoryGrid: View {
-    let homeVM: HomeVM
+    let expense: [(key: Categories, value: Double)]
+    let title: String
     var body: some View {
         VStack {
             let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
             VStack {
-                Text("Bills")
+                Text(title)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 2)
                     .padding(.horizontal, 8)
                 LazyVGrid(columns: columns, spacing: 8) {
-                    ForEach(homeVM.categoryTotals.prefix(4), id: \.key) { cat, value in
+                    ForEach(expense, id: \.key) { cat, value in
                         VStack {
                             Text(cat.rawValue)
                             Text(value.description)
@@ -34,7 +35,7 @@ struct CategoryGrid: View {
                 DisclosureGroup {
                 
                     LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(homeVM.categoryTotals, id: \.key) { cat, value in
+                        ForEach(expense, id: \.key) { cat, value in
                         VStack {
                             Text(cat.rawValue)
                             Text(value.description)
@@ -64,5 +65,5 @@ struct CategoryGrid: View {
     )
     let actor = PersistenceActor(modelContainer: container)
     
-    CategoryGrid(homeVM: HomeVM(groupsRepo: GroupsRepositoryImpl(persistence: actor), expenseRepo: ExpenseRepositoryImpl(persistence: actor), personRepo: PersonRepositoryImpl(persistence: actor)))
+    CategoryGrid(expense: [], title: "demo")
 }

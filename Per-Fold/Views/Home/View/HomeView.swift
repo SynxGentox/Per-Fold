@@ -114,8 +114,8 @@ struct HomeView: View {
                     .padding(8)
                     .card(color: Color(.darkGray).opacity(0.5))
                     
-                    CategoryGrid(homeVM: homeVM)
-                    CategoryGrid(homeVM: homeVM)
+                    CategoryGrid(homeVM: homeVM, title: "Bills")
+                    CategoryGrid(homeVM: homeVM, title: "Top Spents")
                 }
                 .padding([.horizontal, .bottom], 8)
                 
